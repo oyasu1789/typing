@@ -104,10 +104,9 @@ const ATTACK_MOTIONS = ["punch", "punch-alt", "kick", "kick-alt"];
 
 const $ = (id) => document.getElementById(id);
 
-function earnsFirePreventionTimeBonus(mode, word, typedCharacters, missed) {
+function earnsFirePreventionTimeBonus(mode, word, missed) {
   return mode === "fire"
-    && word.type === "sentence"
-    && typedCharacters > FIRE_PREVENTION_TIME_BONUS.minimumCharacters
+    && Array.from(word.reading).length > FIRE_PREVENTION_TIME_BONUS.minimumCharacters
     && !missed;
 }
 
@@ -167,7 +166,7 @@ class TypingManager {
 
     if (complete) {
       const speed = this.current.reading.length / (elapsed / 1000);
-      this.onSuccess(this.current, speed, this.input.length);
+      this.onSuccess(this.current, speed);
       this.lastKeyTime = now;
     }
   }
@@ -343,6 +342,8 @@ class UIManager {
       hit: $("hitEffect"),
       combo: $("combo"),
       speech: $("speech"),
+      timerBlock: $("timerBlock"),
+      timeBonus: $("timeBonus"),
     };
     this.lastPlayerAttackMotion = null;
     this.lastEnemyAttackMotion = null;
@@ -475,6 +476,12 @@ class UIManager {
     this.restartClass(this.nodes.cutIn, "on", 1350);
   }
 
+  static showTimeBonus(seconds) {
+    this.nodes.timeBonus.textContent = `+${seconds}秒`;
+    this.restartClass(this.nodes.timeBonus, "on", 1100);
+    this.restartClass(this.nodes.timerBlock, "bonus-on", 650);
+  }
+
   static say(line) {
     this.nodes.speech.textContent = line;
   }
@@ -510,7 +517,7 @@ class GameManager {
     UIManager.init();
     this.battle = new BattleManager();
     this.typing = new TypingManager(
-      (word, speed, typedCharacters) => this.handleSuccess(word, speed, typedCharacters),
+      (word, speed) => this.handleSuccess(word, speed),
       () => this.handleMiss(),
       () => this.handleCorrectInput(),
       (word, speed, completedChars, totalChars, finalCharacter) => this.handleCharacterComplete(word, speed, completedChars, totalChars, finalCharacter),
@@ -638,21 +645,19 @@ class GameManager {
     this.checkLose();
   }
 
-  static handleSuccess(word, speed, typedCharacters) {
+  static handleSuccess(word, speed) {
     UIManager.renderBattle(this.battle);
     const earnedTimeBonus = earnsFirePreventionTimeBonus(
       this.selectedMode,
       word,
-      typedCharacters,
       this.currentWordMissed,
     );
     if (earnedTimeBonus) {
       this.timeLeft += FIRE_PREVENTION_TIME_BONUS.seconds;
       $("timer").textContent = this.timeLeft;
+      UIManager.showTimeBonus(FIRE_PREVENTION_TIME_BONUS.seconds);
     }
-    $("statusLine").textContent = earnedTimeBonus
-      ? `${speed.toFixed(1)} kana/sec / ノーミス +${FIRE_PREVENTION_TIME_BONUS.seconds}秒`
-      : `${speed.toFixed(1)} kana/sec`;
+    $("statusLine").textContent = `${speed.toFixed(1)} kana/sec`;
     this.checkLose();
     if (this.running) this.nextWord();
   }
