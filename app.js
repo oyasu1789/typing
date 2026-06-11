@@ -634,8 +634,7 @@ class GameManager {
   static handleSuccess(word, speed) {
     UIManager.renderBattle(this.battle);
     const earnedTimeBonus = this.selectedMode === "fire"
-      && word.type === "sentence"
-      && Array.from(word.display).length > FIRE_PREVENTION_TIME_BONUS.minimumCharacters
+      && Array.from(word.reading).length > FIRE_PREVENTION_TIME_BONUS.minimumCharacters
       && !this.currentWordMissed;
     if (earnedTimeBonus) {
       this.timeLeft += FIRE_PREVENTION_TIME_BONUS.seconds;
