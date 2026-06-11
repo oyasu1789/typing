@@ -902,7 +902,7 @@ body {
 }
 
 .player .sprite {
-  background-image: url("assets/oyaji-idle.png");
+  background-image: url("./assets/oyaji-idle.png?v=2");
 }
 
 .enemy.enemy-1 .sprite {
