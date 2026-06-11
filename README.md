@@ -40,4 +40,5 @@ node --check scripts/build-fire-fallback.js
 - 動的な画面出力には `textContent` を使用しています。
 - Content Security Policyを設定しています。
 - CSVのサイズ、行数、必須列、値、文字数を検証しています。
-- 公開サーバーではHTTPSと適切なHTTPセキュリティヘッダーも設定してください。
+- `_headers` 対応ホスティングでは、HTTPS向けのセキュリティヘッダーを適用できます。
+- 公開・脆弱性報告に関する詳細は [SECURITY.md](SECURITY.md) を参照してください。
