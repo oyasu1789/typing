@@ -104,6 +104,13 @@ const ATTACK_MOTIONS = ["punch", "punch-alt", "kick", "kick-alt"];
 
 const $ = (id) => document.getElementById(id);
 
+function earnsFirePreventionTimeBonus(mode, word, typedCharacters, missed) {
+  return mode === "fire"
+    && word.type === "sentence"
+    && typedCharacters > FIRE_PREVENTION_TIME_BONUS.minimumCharacters
+    && !missed;
+}
+
 class TypingManager {
   constructor(onSuccess, onMiss, onCorrectInput, onCharacterComplete) {
     this.onSuccess = onSuccess;
@@ -160,7 +167,7 @@ class TypingManager {
 
     if (complete) {
       const speed = this.current.reading.length / (elapsed / 1000);
-      this.onSuccess(this.current, speed);
+      this.onSuccess(this.current, speed, this.input.length);
       this.lastKeyTime = now;
     }
   }
@@ -503,7 +510,7 @@ class GameManager {
     UIManager.init();
     this.battle = new BattleManager();
     this.typing = new TypingManager(
-      (word, speed) => this.handleSuccess(word, speed),
+      (word, speed, typedCharacters) => this.handleSuccess(word, speed, typedCharacters),
       () => this.handleMiss(),
       () => this.handleCorrectInput(),
       (word, speed, completedChars, totalChars, finalCharacter) => this.handleCharacterComplete(word, speed, completedChars, totalChars, finalCharacter),
@@ -631,11 +638,14 @@ class GameManager {
     this.checkLose();
   }
 
-  static handleSuccess(word, speed) {
+  static handleSuccess(word, speed, typedCharacters) {
     UIManager.renderBattle(this.battle);
-    const earnedTimeBonus = this.selectedMode === "fire"
-      && Array.from(word.reading).length > FIRE_PREVENTION_TIME_BONUS.minimumCharacters
-      && !this.currentWordMissed;
+    const earnedTimeBonus = earnsFirePreventionTimeBonus(
+      this.selectedMode,
+      word,
+      typedCharacters,
+      this.currentWordMissed,
+    );
     if (earnedTimeBonus) {
       this.timeLeft += FIRE_PREVENTION_TIME_BONUS.seconds;
       $("timer").textContent = this.timeLeft;
