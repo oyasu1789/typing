@@ -1,0 +1,141 @@
+<!doctype html>
+<html lang="ja">
+  <head>
+    <meta charset="UTF-8" />
+    <meta name="viewport" content="width=device-width, initial-scale=1.0" />
+    <meta name="referrer" content="no-referrer" />
+    <meta
+      http-equiv="Content-Security-Policy"
+      content="default-src 'self'; base-uri 'none'; object-src 'none'; script-src 'self'; style-src 'self'; img-src 'self'; connect-src 'self'; font-src 'none'; media-src 'none'; frame-src 'none'; worker-src 'none'; form-action 'none'"
+    />
+    <title>おやじ狩り狩り</title>
+    <link rel="stylesheet" href="styles.css" />
+  </head>
+  <body>
+    <main id="game" class="game-shell">
+      <section id="titleScreen" class="title-screen">
+        <div class="title-stage">
+          <p class="title-kicker">～おやじの財布（全財産）を守れ！！～</p>
+          <h1>おやじ狩り狩り</h1>
+          <p id="titleResult" class="title-result">最近の若いもんは...</p>
+          <div class="mode-select" aria-label="ゲームモード選択">
+            <button class="selected" type="button" data-game-mode="normal" aria-pressed="true">
+              <span>通常モード</span>
+              <small>おやじ狩り狩りワード</small>
+            </button>
+            <button type="button" data-game-mode="fire" aria-pressed="false">
+              <span>火災予防モード</span>
+              <small>火災予防ワード</small>
+            </button>
+          </div>
+          <div class="difficulty-select" aria-label="難易度選択">
+            <button type="button" data-difficulty="easy">
+              <span>易しい</span>
+              <small>練習向け</small>
+            </button>
+            <button type="button" data-difficulty="normal">
+              <span>普通</span>
+              <small>標準</small>
+            </button>
+            <button type="button" data-difficulty="hard">
+              <span>難しい</span>
+              <small>本気勝負</small>
+            </button>
+          </div>
+        </div>
+      </section>
+
+      <section id="resultScreen" class="result-screen hidden" aria-label="リザルト">
+        <div class="result-stage">
+          <p class="result-kicker">BATTLE RESULT</p>
+          <h2 id="resultHeading">GAME OVER</h2>
+          <p id="resultSummary" class="result-summary"></p>
+          <div id="resultStats" class="result-stats" aria-label="成績">
+            <div>Score <strong id="resultScore">0</strong></div>
+            <div>Max Combo <strong id="resultCombo">0</strong></div>
+            <div>撃破 <strong id="resultDefeated">0</strong></div>
+            <div>正確率 <strong id="resultAccuracy">100%</strong></div>
+          </div>
+          <div class="result-actions">
+            <button id="backToTopButton" type="button">TOP画面に戻る</button>
+            <button id="retryButton" class="primary" type="button">再挑戦する</button>
+          </div>
+        </div>
+      </section>
+
+      <section class="hud" aria-label="戦闘状況">
+        <div class="fighter-panel">
+          <div class="name-row">
+            <span>おやじ</span>
+            <span id="playerHpText">100</span>
+          </div>
+          <div class="bar hp-bar"><span id="playerHp"></span></div>
+          <div class="bar special-bar"><span id="specialGauge"></span></div>
+        </div>
+
+        <div class="timer-block">
+          <div id="timer">99</div>
+          <div id="stageName">駅前</div>
+        </div>
+
+        <div class="fighter-panel enemy-side">
+          <div class="name-row">
+            <span id="enemyName">チンピラ高校生</span>
+            <span id="enemyHpText">100</span>
+          </div>
+          <div class="bar hp-bar"><span id="enemyHp"></span></div>
+          <div class="bar danger-bar"><span id="enemyThreat"></span></div>
+        </div>
+      </section>
+
+      <section id="arena" class="arena" aria-label="バトル画面">
+        <div class="street-lights"></div>
+        <div class="city">
+          <span></span><span></span><span></span><span></span><span></span>
+        </div>
+        <div id="screenFlash" class="screen-flash"></div>
+        <div id="cutIn" class="cut-in">チンピラ高校生が現れた！</div>
+        <div id="hitEffect" class="hit-effect">HIT</div>
+        <div id="combo" class="combo">0 COMBO</div>
+        <div id="speech" class="speech">最近の若いもんは...</div>
+
+        <div id="player" class="fighter player idle">
+          <div class="shadow"></div>
+          <div class="sprite"></div>
+          <span class="shine"></span>
+        </div>
+
+        <div id="enemy" class="fighter enemy idle">
+          <div class="shadow"></div>
+          <div class="sprite"></div>
+        </div>
+
+        <div class="ground"></div>
+      </section>
+
+      <section class="typing-panel" aria-label="タイピング">
+        <div class="word-meta">
+          <span id="wordType">normal</span>
+          <span id="difficulty">easy</span>
+        </div>
+        <div id="displayWord" class="display-word">読み込み中</div>
+        <div id="reading" class="reading">CSVを読み込んでいます</div>
+        <div class="romaji-line">
+          <span id="typedText"></span><span id="remainingText"></span>
+        </div>
+        <div id="statusLine" class="status-line">Enter または 画面クリックで開始</div>
+      </section>
+
+      <section class="score-row" aria-label="スコア">
+        <div>Score <strong id="score">0</strong></div>
+        <div>Max Combo <strong id="maxCombo">0</strong></div>
+        <div>High Score <strong id="highScore">0</strong></div>
+      </section>
+
+      <button id="startButton" class="start-button hidden" type="button">START</button>
+    </main>
+
+    <script src="fire_prevention_words_fallback.js"></script>
+    <script src="app.js"></script>
+  </body>
+</html>

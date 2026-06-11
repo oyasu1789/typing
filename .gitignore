@@ -1,0 +1,28 @@
+# Local Codex/agent state
+.agents/
+.codex/
+
+# Internal documents containing local metadata
+oyajigari_complete_requirements.docx
+
+# Secrets and local configuration
+.env
+.env.*
+!.env.example
+
+# Dependencies and generated output
+node_modules/
+dist/
+coverage/
+__pycache__/
+*.py[cod]
+*.log
+
+# Editor and OS files
+.idea/
+.vscode/
+.DS_Store
+Thumbs.db
+desktop.ini
+*~
+*.swp
